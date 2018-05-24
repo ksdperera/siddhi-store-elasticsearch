@@ -26,7 +26,7 @@ public class ElasticsearchTableConstants {
     public static final String ANNOTATION_ELEMENT_HOSTNAME = "host";
     public static final String ANNOTATION_ELEMENT_PORT = "port";
     public static final String ANNOTATION_ELEMENT_SCHEME = "scheme";
-    public static final String ANNOTATION_ELEMENT_USER = "user";
+    public static final String ANNOTATION_ELEMENT_USER = "username";
     public static final String ANNOTATION_ELEMENT_PASSWORD = "password";
     public static final String ANNOTATION_ELEMENT_INDEX_NAME = "index.name";
     public static final String ANNOTATION_ELEMENT_INDEX_NUMBER_OF_SHARDS = "index.number.of.shards";

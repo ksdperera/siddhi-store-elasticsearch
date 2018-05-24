@@ -94,7 +94,7 @@ import static org.wso2.extension.siddhi.store.elasticsearch.utils.ElasticsearchT
                 @Parameter(name = "scheme",
                         description = "The scheme type of the Elasticsearch server connection.",
                         type = {DataType.STRING}, optional = true, defaultValue = "http"),
-                @Parameter(name = "user",
+                @Parameter(name = "username",
                         description = "The user name for the Elasticsearch server connection.",
                         type = {DataType.STRING}, optional = true, defaultValue = "elastic"),
                 @Parameter(name = "password",
@@ -111,15 +111,24 @@ import static org.wso2.extension.siddhi.store.elasticsearch.utils.ElasticsearchT
                 @Parameter(name = "index.number.of.shards",
                         description = "The number of shards for the index in Elasticsearch server.",
                         type = {DataType.INT}, optional = true, defaultValue = "3"),
-                @Parameter(name = "index.number_of_replicas",
+                @Parameter(name = "index.number.of.replicas",
                         description = "The number of replicas for the index in Elasticsearch server.",
                         type = {DataType.INT}, optional = true, defaultValue = "2"),
         },
 
         examples = {
                 @Example(
-                        syntax = " ",
-                        description = " "
+                        syntax = "@Store(type=\"elasticsearch\", host=\"localhost\", " +
+                                "username=\"elastic\", password=\"changeme\" , index.name=\"MyStockTable\"," +
+                                "field.length=\"symbol:100\")\n" +
+                                "@PrimaryKey(\"symbol\")" +
+                                "define table StockTable (symbol string, price float, volume long);",
+                        description = "The above example creates an index named `MyStockTable` on the Elasticsearch " +
+                                "server if it does not already exist (with 3 attributes named `symbol`, `price`," +
+                                " and `volume` of the types types `string`, `float` and `long` respectively). " +
+                                "The connection is made as specified by the parameters configured for the '@Store' " +
+                                "annotation. The `symbol` attribute is considered a unique field, and a Elasticsearch" +
+                                " index document id is generated for it."
                 )
         }
 )
