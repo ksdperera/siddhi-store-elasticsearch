@@ -10,6 +10,7 @@ import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
@@ -428,7 +429,28 @@ public class ElasticsearchEventTable extends AbstractRecordTable {
     protected void updateOrAdd(CompiledCondition compiledCondition, List<Map<String, Object>> list,
                                Map<String, CompiledExpression> map, List<Map<String, Object>> list1,
                                List<Object[]> list2) throws ConnectionUnavailableException {
-
+        try {
+            for (Object[] record : list2) {
+                String docId = null;
+                if (primaryKeys != null && !primaryKeys.isEmpty()) {
+                    docId = ElasticsearchTableUtils.generateRecordIdFromPrimaryKeyValues(attributes, record,
+                            primaryKeys);
+                }
+                XContentBuilder builder = XContentFactory.jsonBuilder();
+                builder.startObject();
+                {
+                    for (int i = 0; i < attributes.size(); i++) {
+                        builder.field(attributes.get(i).getName(), record[i]);
+                    }
+                }
+                builder.endObject();
+                UpdateRequest request = new UpdateRequest(indexName, ELASTICSEARCH_INDEX_TYPE,
+                        docId != null ? docId : "1").doc(builder);
+                restHighLevelClient.update(request);
+            }
+        } catch (Throwable throwable) {
+            this.add(list2);
+        }
     }
 
     /**
